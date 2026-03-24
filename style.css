@@ -368,23 +368,84 @@ footer {
     text-decoration: none;
 }
 
+/* Tablet Optimization */
+@media (max-width: 1024px) {
+    .books-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    header {
+        padding: 1rem 3%;
+    }
+    
+    main {
+        padding: 1.5rem 3%;
+    }
+}
+
+/* Mobile Optimization - Phones */
 @media (max-width: 768px) {
     header {
         flex-direction: column;
-        gap: 1.5rem;
+        gap: 1rem;
         padding: 1rem;
     }
 
     #category-filters {
         flex-wrap: wrap;
         justify-content: center;
+        gap: 0.5rem;
+    }
+    
+    .filter-btn, .shelves-select, .icon-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
     }
 
     h1 {
         font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .books-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1rem;
+    }
+    
+    .book-info {
+        padding: 0.8rem;
+    }
+    
+    .book-title {
+        font-size: 1rem;
+    }
+    
+    .book-category {
+        font-size: 0.7rem;
     }
 
     .modal-content {
         max-width: 95%;
+        max-height: 70vh;
+    }
+    
+    #modal-caption {
+        font-size: 1.2rem;
+        padding: 1rem 0;
+        width: 95%;
+    }
+    
+    .close-modal {
+        top: 10px;
+        right: 20px;
+        font-size: 35px;
+    }
+    
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
     }
 }
