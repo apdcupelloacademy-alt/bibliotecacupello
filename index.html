@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Libreria Digitale - Visualizza i tuoi Libri</title>
+    <meta name="description"
+        content="Visualizza e organizza la tua collezione di libri per categoria in modo elegante e veloce.">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="logo">Libreria<span>Digitale</span></div>
+        <nav id="category-filters">
+            <!-- I filtri verranno generati dinamicamente da script.js -->
+            <button class="filter-btn active" data-category="all">Tutti</button>
+            <button id="fullscreen-btn" class="icon-btn" title="Attiva/Disattiva Schermo Intero">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+                    </path>
+                </svg>
+                <span>Schermo Intero</span>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <h1 id="current-category-title">Tutti i Libri</h1>
+        <div id="books-grid" class="books-grid">
+            <!-- I libri verranno caricati qui via JavaScript -->
+            <div class="loading">Caricamento in corso...</div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Libreria Digitale - Organizzazione Libri</p>
+    </footer>
+
+    <div id="image-modal" class="modal">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="modal-img">
+        <div id="modal-caption"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
