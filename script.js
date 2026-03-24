@@ -10,6 +10,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let allBooks = {};
 
+    const shelfNames = {
+        "000": "000 Generalità",
+        "100": "100 Filosofia e psicologia",
+        "200": "200 Religione",
+        "300": "300 Scienze sociali",
+        "400": "400 Scienze del linguaggio",
+        "500": "500 Scienze naturali e matematica (scienze pure)",
+        "600": "600 Tecnologia (scienze applicate)",
+        "700": "700 Le arti",
+        "800": "800 Letteratura e retorica",
+        "900": "900 Geografia e storia"
+    };
+
     // ---- CONFIGURAZIONE GOOGLE DRIVE ----
     // INSERISCI QUI I TUOI DATI
     const API_KEY = 'AIzaSyDnPURxUwGBfOw0MweRbAvAU3AG0auRVH8';
@@ -113,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             numericalCats.forEach(num => {
                 const opt = document.createElement('option');
                 opt.value = num;
-                opt.textContent = num;
+                opt.textContent = shelfNames[num] || num;
                 select.appendChild(opt);
             });
 
@@ -158,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
         } else {
-            categoryTitle.textContent = categoryFilter;
+            categoryTitle.textContent = shelfNames[categoryFilter] || categoryFilter;
             if (allBooks[categoryFilter]) {
                 allBooks[categoryFilter].forEach(fileData => {
                     booksToShow.push({ category: categoryFilter, file: fileData });
@@ -189,6 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Estrae il nome dalla foto (rimuove estensione e sostituisce underscore/trattini con spazi)
             const displayName = fileName.split('.')[0].replace(/[_-]/g, ' ');
+            const displayCategory = shelfNames[book.category] || book.category;
 
             card.innerHTML = `
                 <div class="book-img-container">
@@ -196,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="book-info">
                     <div class="book-title" title="${displayName}">${displayName}</div>
-                    <div class="book-category">${book.category}</div>
+                    <div class="book-category">${displayCategory}</div>
                 </div>
             `;
 
@@ -243,6 +257,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    // Gestione Pulsante Torna Su
+    const backToTopBtn = document.getElementById('back-to-top-btn');
+    if (backToTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        });
+        
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 
     // Avvio caricamento
     loadBooks();
