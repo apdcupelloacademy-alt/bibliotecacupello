@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const booksGrid = document.getElementById('books-grid');
     const filterButtons = document.querySelectorAll('.filter-btn');
     const categoryTitle = document.getElementById('current-category-title');
-    const fullscreenBtn = document.getElementById('fullscreen-btn');
     const modal = document.getElementById('image-modal');
     const modalImg = document.getElementById('modal-img');
     const captionText = document.getElementById('modal-caption');
@@ -104,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.className = 'filter-btn';
             btn.setAttribute('data-category', category);
             btn.textContent = category;
-            filtersContainer.insertBefore(btn, fullscreenBtn);
+            filtersContainer.appendChild(btn);
         });
 
         // 3. Aggiungi Dropdown per categorie numeriche (Scaffali)
@@ -131,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             selectContainer.appendChild(select);
-            filtersContainer.insertBefore(selectContainer, fullscreenBtn);
+            filtersContainer.appendChild(selectContainer);
 
             select.addEventListener('change', () => {
                 const filterBtns = filtersContainer.querySelectorAll('.filter-btn');
@@ -242,19 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modal.style.display === 'block') {
             modal.style.display = 'none';
-        }
-    });
-
-    // Gestione Fullscreen
-    fullscreenBtn.addEventListener('click', () => {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(err => {
-                console.error(`Errore nel tentativo di attivare il fullscreen: ${err.message}`);
-            });
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
         }
     });
 
