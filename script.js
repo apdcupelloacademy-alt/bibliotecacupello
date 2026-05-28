@@ -35,29 +35,48 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            // 1. Trova tutte le sottocartelle (Categorie) nella cartella radice
-            const urlFolders = `https://www.googleapis.com/drive/v3/files?q='${G_DRIVE_ROOT_FOLDER_ID}'+in+parents+and+mimeType%3D'application%2Fvnd.google-apps.folder'+and+trashed%3Dfalse&fields=files(id,name)&key=${API_KEY}`;
-            const resFolders = await fetch(urlFolders);
-            const dataFolders = await resFolders.json();
+            // 1. Trova tutte le sottocartelle (Categorie) nella cartella radice con paginazione
+            let folders = [];
+            let nextFolderPageToken = '';
+            do {
+                const pageTokenParam = nextFolderPageToken ? `&pageToken=${nextFolderPageToken}` : '';
+                const urlFolders = `https://www.googleapis.com/drive/v3/files?q='${G_DRIVE_ROOT_FOLDER_ID}'+in+parents+and+mimeType%3D'application%2Fvnd.google-apps.folder'+and+trashed%3Dfalse&fields=nextPageToken,files(id,name)&pageSize=1000&key=${API_KEY}${pageTokenParam}`;
+                const resFolders = await fetch(urlFolders);
+                const dataFolders = await resFolders.json();
 
-            if (dataFolders.error) {
-                throw new Error(dataFolders.error.message);
-            }
+                if (dataFolders.error) {
+                    throw new Error(dataFolders.error.message);
+                }
 
-            const folders = dataFolders.files || [];
+                if (dataFolders.files) {
+                    folders = folders.concat(dataFolders.files);
+                }
+                nextFolderPageToken = dataFolders.nextPageToken || '';
+            } while (nextFolderPageToken);
+
             allBooks = {};
 
-            // 2. Per ogni cartella, preleva i file immagine all'interno
+            // 2. Per ogni cartella, preleva i file immagine all'interno con paginazione
             const fetchPromises = folders.map(async (folder) => {
-                const urlFiles = `https://www.googleapis.com/drive/v3/files?q='${folder.id}'+in+parents+and+mimeType+contains+'image%2F'+and+trashed%3Dfalse&fields=files(id,name,thumbnailLink)&key=${API_KEY}`;
-                const resFiles = await fetch(urlFiles);
-                const dataFiles = await resFiles.json();
+                let files = [];
+                let nextFilePageToken = '';
+                do {
+                    const pageTokenParam = nextFilePageToken ? `&pageToken=${nextFilePageToken}` : '';
+                    const urlFiles = `https://www.googleapis.com/drive/v3/files?q='${folder.id}'+in+parents+and+mimeType+contains+'image%2F'+and+trashed%3Dfalse&fields=nextPageToken,files(id,name,thumbnailLink)&pageSize=1000&key=${API_KEY}${pageTokenParam}`;
+                    const resFiles = await fetch(urlFiles);
+                    const dataFiles = await resFiles.json();
 
-                if (dataFiles.files && dataFiles.files.length > 0) {
-                    allBooks[folder.name] = dataFiles.files; // Salva la lista di oggetti {id, name}
-                } else {
-                    allBooks[folder.name] = []; // Categoria vuota
-                }
+                    if (dataFiles.error) {
+                        throw new Error(dataFiles.error.message);
+                    }
+
+                    if (dataFiles.files) {
+                        files = files.concat(dataFiles.files);
+                    }
+                    nextFilePageToken = dataFiles.nextPageToken || '';
+                } while (nextFilePageToken);
+
+                allBooks[folder.name] = files;
             });
 
             // Aspetta che tutte le chiamate API terminino
